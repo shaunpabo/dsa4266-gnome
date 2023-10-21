@@ -4,15 +4,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 class GeneDataset(Dataset):
-    def __init__(self, filepath):
-        self.df = pd.read_csv(filepath, index_col=0)
-        self.X_df = self.df.drop(columns=["label", "seq"])
-        self.y_df = self.df.label
+    def __init__(self, X_df, y_df):
+        self.X_df = X_df
+        self.y_df = y_df
 
     def __len__(self):
-        return len(self.df)
+        return len(self.X_df)
 
     def __getitem__(self, idx):
-        X_data = self.X_df.iloc[idx, :9]
+        X_data = self.X_df[idx]
         y_data = self.y_df.iloc[idx]
-        return X_data.values, y_data
+        return X_data, y_data
