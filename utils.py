@@ -129,6 +129,17 @@ def jaccard_similarity(kmer_ls, sliced):
 
     return (intersection_ab/union_ab + intersection_ac/union_ac + intersection_bc/union_bc)/3
 
+def eiip(seq):
+    eiip_values = {
+    'A': 0.1260,
+    'C': 0.1340,
+    'G': 0.0806,
+    'T': 0.1335,
+    }
+
+    return np.mean([eiip_values[n] for n in seq])
+    
+
 ##########################
 # To parse training data #
 ##########################
@@ -183,6 +194,8 @@ def parse_data(info_path, json_zip_path):
    data['dacc_bet'] = data['sequence'].apply(lambda x: dacc(list(get_knf(x, 5))[0], list(get_knf(x, 5))[2]))
    # Get jaccard similarity
    data['js_all'] = data['sequence'].apply(lambda x: jaccard_similarity(list(get_knf(x, 5)), 2))
+   # Get eiip
+   data["eiip"] = data.apply(lambda x: eiip(x.sequence), axis=1)
 
    return data
 
@@ -232,6 +245,8 @@ def parse_test_data(json_zip_path):
     data['dacc_bet'] = data['sequence'].apply(lambda x: dacc(list(get_knf(x, 5))[0], list(get_knf(x, 5))[2]))
     # Get jaccard similarity
     data['js_all'] = data['sequence'].apply(lambda x: jaccard_similarity(list(get_knf(x, 5)), 2))
+    # Get eiip
+    data["eiip"] = data.apply(lambda x: eiip(x.sequence), axis=1)
     
 
     return data  
