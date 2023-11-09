@@ -146,11 +146,11 @@ def eiip(seq):
 # To parse training data #
 ##########################
 
-def parse_data(info_path, json_zip_path):
+def parse_data(info_path, json_path):
    # loads data
-    print(f"Loading {json_zip_path}...")
-    with gzip.open(json_zip_path, "r") as f:
-        data = [json.loads(line) for line in f]
+    print(f"Loading {json_path}...")
+    with open(json_path, "r") as f:
+      data = [json.loads(line) for line in f]
 
     # loads data with label
     print(f"Loading {info_path}...")
