@@ -7,6 +7,33 @@ from multiprocessing import get_context, cpu_count
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from predict_utils import *
 
+def task(i):
+    print("parsing file" + i)
+    json_file = "./m6anet/" + i + "/data.json"
+    info_file = "./m6anet/" + i + "/data.info"
+    cancer = i.split('_')[1]
+
+    data = parse_data(info_file, json_file)
+
+    with open("./weights/rfecv_features.pkl","rb") as f:
+        rfecv_features = pickle.load(f)
+    
+    identifier = ["transcript_id", "transcript_position", "start", "end", "n_reads"]
+
+    data = data.loc[:,identifier + rfecv_features]
+
+    with open("./weights/xgbmodel.pkl","rb") as f:
+        clf_xgb = pickle.load(f)
+    scaled_data = scale_data(data, rfecv_features, identifier)
+
+    y_hat = get_predict_col(scaled_data, clf_xgb, rfecv_features)
+    # del scaled_data
+    print("Concatenating prediction column...")
+    df = pd.concat([pd.DataFrame({"cell_line": [cancer] * len(data) }), data, y_hat], axis = 1)
+
+    print("Completed job" + i)
+    return df
+
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Prediction script for DSA4266 Team Gnome')
     group = parser.add_mutually_exclusive_group()
