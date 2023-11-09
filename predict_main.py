@@ -2,7 +2,7 @@ import pandas as pd
 import pickle
 import argparse
 import os
-import sys
+from sklearn.metrics import average_precision_score, roc_auc_score, accuracy_score
 from multiprocessing import get_context, cpu_count
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from predict_utils import *
@@ -17,6 +17,8 @@ if __name__=='__main__':
         print("Test predictions")
         # PARSE DATA
         data = pd.read_csv('./data/stdtestset.csv')
+        y_data = data.label
+        print(data.columns)
 
         # PREPROCESSING
         features = ['dwelling_t-1', 'sd_-1', 'mean_-1', 'dwelling_t0', 
@@ -49,6 +51,11 @@ if __name__=='__main__':
         data['class_1_proba'] = y_pred_proba[:, 1]
         data.to_csv("./output/test_data_predictions.csv", index=False)
         print("Predictions saved to ./output/test_data_predictions.csv")
+
+        auc_score = roc_auc_score(y_data, y_pred_proba[:,1])
+        ap = average_precision_score(y_data, y_pred_proba[:,1])
+
+        print(f"Val Acc: {accuracy_score(y_data, y_pred)} | Val AUC-ROC {auc_score} | Val PR-ROC {ap}")
 
     else:
         all_folders = os.listdir("./m6anet")
