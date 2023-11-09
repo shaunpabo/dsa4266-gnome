@@ -14,6 +14,7 @@ if __name__=='__main__':
     group.add_argument("--sgnex", action="store_true")
     args = parser.parse_args()
     if args.test_sample:
+        print("Test predictions")
         # PARSE DATA
         data = pd.read_csv('./data/stdtestset.csv')
 
@@ -47,6 +48,7 @@ if __name__=='__main__':
         data['class_0_proba'] = y_pred_proba[:, 0]
         data['class_1_proba'] = y_pred_proba[:, 1]
         data.to_csv("./output/test_data_predictions.csv", index=False)
+        print("Predictions saved to ./output/test_data_predictions.csv")
 
     else:
         all_folders = os.listdir("./m6anet")
