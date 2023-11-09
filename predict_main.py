@@ -65,7 +65,7 @@ if __name__=='__main__':
         context = get_context('fork')
         print(f'Starting predict task with {num_cores} cpu cores')
         # create the process pool
-        with ProcessPoolExecutor(max_workers=4, mp_context=context) as executor:
+        with ProcessPoolExecutor(max_workers=num_cores, mp_context=context) as executor:
             # perform calculations
             df_list = []
             futures = [executor.submit(task, folder) for folder in all_folders]
