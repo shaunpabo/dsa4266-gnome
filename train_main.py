@@ -102,7 +102,7 @@ if __name__=='__main__':
         }
 
     print("Gridsearching...")
-    gscv_model = GridSearchCV(clf, param_grid = params, verbose = 2, cv=5, scoring = 'roc_auc', n_jobs=-1)
+    gscv_model = GridSearchCV(clf, param_grid = params, verbose = 2, cv=5, scoring = 'roc_auc', n_jobs=1)
     gscv_model.fit(X_train_new,y_train)
     print("Gridsearch complete")
     pickle.dump(gscv_model.best_estimator_,open("./weights/rfmodelgs.pkl", "wb"))
