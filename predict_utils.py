@@ -73,8 +73,6 @@ def get_PWM_score(seq,log_odds_dict):
         res = res + dic[base]
     return res
 
-index_ls = ["AA", "AG", "AT", "AC", "GG", "GA", "GT", "GC", "TT", "TA", "TG", "TC", "CC", "CA", "CT", "CG"]
-
 def get_knf(seq, k, index_ls=["AA", "AG", "AT", "AC", "GG", "GA", "GT", "GC", "TT", "TA", "TG", "TC", "CC", "CA", "CT", "CG"], prob = True, output_dic = True):
     dic = {}
     n_kmers = len(seq) - k + 1
@@ -183,6 +181,8 @@ def parse_data(info_path, json_path):
     data = pd.concat([data,encoder.fit_transform(data['sequence'].str.split('', expand = True)[[1, 2, 3, 5, 6, 7]].rename(columns = {3: 'nucleo_-1', 5: 'nucleo_1',
                                                                                                         1: 'nucleo_-3', 2: 'nucleo_-2',
                                                                                                         6: 'nucleo_2', 7: 'nucleo_3'}))],axis=1)
+    
+    index_ls = ["AA", "AG", "AT", "AC", "GG", "GA", "GT", "GC", "TT", "TA", "TG", "TC", "CC", "CA", "CT", "CG"]
     # Get pwm
     log_odds_dict, ppm = get_log_odds(data.sequence)
     data["pwm_score"] = data.apply(lambda x: get_PWM_score(x.sequence, log_odds_dict),axis=1)
@@ -234,6 +234,8 @@ def parse_test_data(json_zip_path):
     data = pd.concat([data,encoder.fit_transform(data['sequence'].str.split('', expand = True)[[1, 2, 3, 5, 6, 7]].rename(columns = {3: 'nucleo_-1', 5: 'nucleo_1',
                                                                                                          1: 'nucleo_-3', 2: 'nucleo_-2',
                                                                                                          6: 'nucleo_2', 7: 'nucleo_3'}))],axis=1)
+    index_ls = ["AA", "AG", "AT", "AC", "GG", "GA", "GT", "GC", "TT", "TA", "TG", "TC", "CC", "CA", "CT", "CG"]
+    
     # Get pwm
     log_odds_dict, ppm = get_log_odds(data.sequence)
     data["pwm_score"] = data.apply(lambda x: get_PWM_score(x.sequence, log_odds_dict),axis=1)
