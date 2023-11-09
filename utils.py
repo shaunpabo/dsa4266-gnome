@@ -74,45 +74,45 @@ def get_PWM_score(seq,log_odds_dict):
 index_ls = ["AA", "AG", "AT", "AC", "GG", "GA", "GT", "GC", "TT", "TA", "TG", "TC", "CC", "CA", "CT", "CG"]
 
 def get_knf(seq, k, index_ls=["AA", "AG", "AT", "AC", "GG", "GA", "GT", "GC", "TT", "TA", "TG", "TC", "CC", "CA", "CT", "CG"], prob = True, output_dic = True):
-  dic = {}
-  n_kmers = len(seq) - k + 1
-  for i in range(n_kmers):
-    kmer = seq[i: i + k]
-    if kmer not in dic:
-      dic[kmer] = 0
-    dic[kmer] += 1
-  if prob != True:
-    return dic
-  if output_dic != True:
-    ls = np.zeros(len(index_ls))
-    for k, v in dic.items():
-      ls[index_ls.index(k)] = v
-    return ls/n_kmers
-  return {k: v/n_kmers for k, v in dic.items()}
+    dic = {}
+    n_kmers = len(seq) - k + 1
+    for i in range(n_kmers):
+        kmer = seq[i: i + k]
+        if kmer not in dic:
+            dic[kmer] = 0
+        dic[kmer] += 1
+    if prob != True:
+        return dic
+    if output_dic != True:
+        ls = np.zeros(len(index_ls))
+        for k, v in dic.items():
+            ls[index_ls.index(k)] = v
+        return ls/n_kmers
+    return {k: v/n_kmers for k, v in dic.items()}
 
 def get_cksnap(seq, k, index_ls=["AA", "AG", "AT", "AC", "GG", "GA", "GT", "GC", "TT", "TA", "TG", "TC", "CC", "CA", "CT", "CG"], output_dic = True):
-  dic = {}
-  n_ks_mers = len(seq) - k - 1
-  for i in range(n_ks_mers):
-    kmer = seq[i: i + k + 2]
-    ks_mer = kmer[0] + kmer[-1]
+    dic = {}
+    n_ks_mers = len(seq) - k - 1
+    for i in range(n_ks_mers):
+        kmer = seq[i: i + k + 2]
+        ks_mer = kmer[0] + kmer[-1]
     if ks_mer not in dic:
-      dic[ks_mer] = 0
+        dic[ks_mer] = 0
     dic[ks_mer] += 1
-  if output_dic != True:
-    ls = np.zeros(len(index_ls))
-    for k, v in dic.items():
-      ls[index_ls.index(k)] = v
-    return ls/n_ks_mers
-  return {k: v/n_ks_mers for k, v in dic.items()}
+    if output_dic != True:
+        ls = np.zeros(len(index_ls))
+        for k, v in dic.items():
+            ls[index_ls.index(k)] = v
+        return ls/n_ks_mers
+    return {k: v/n_ks_mers for k, v in dic.items()}
 
 def dacc(seq1, seq2):
-  acc = 0
-  seq1_knf = get_knf(seq1, 2, False)
-  seq2_knf = get_knf(seq2, 2, False)
-  for i in range(len(seq1) - 3):
-    acc += seq1_knf[seq1[i:i+2]]*seq2_knf[seq2[i+2: i+4]] + seq1_knf[seq1[i+2: i+4]]*seq2_knf[seq2[i:i+2]]
-  return acc
+    acc = 0
+    seq1_knf = get_knf(seq1, 2, False)
+    seq2_knf = get_knf(seq2, 2, False)
+    for i in range(len(seq1) - 3):
+        acc += seq1_knf[seq1[i:i+2]]*seq2_knf[seq2[i+2: i+4]] + seq1_knf[seq1[i+2: i+4]]*seq2_knf[seq2[i:i+2]]
+    return acc
 
 
 
@@ -146,58 +146,58 @@ def eiip(seq):
 
 def parse_data(info_path, json_zip_path):
    # loads data
-   print(f"Loading {json_zip_path}...")
-   with gzip.open(json_zip_path, "r") as f:
-      data = [json.loads(line) for line in f]
+    print(f"Loading {json_zip_path}...")
+    with gzip.open(json_zip_path, "r") as f:
+        data = [json.loads(line) for line in f]
 
-   # loads data with label
-   print(f"Loading {info_path}...")
-   info = pd.read_csv(info_path)
+    # loads data with label
+    print(f"Loading {info_path}...")
+    info = pd.read_csv(info_path)
 
-   #transfer information from json dict to list
-   print("Transferring data from json to dataframe...")
-   res = []
-   for row in data:
-      for trans_id in row.keys():
-         for trans_pos in row[trans_id].keys():
-            for nucleo_seq in row[trans_id][trans_pos].keys():
-               temp = list(np.mean(np.array(row[trans_id][trans_pos][nucleo_seq]), axis=0))
-               # to get raw data without aggregation
-               # for features in row[trans_id][trans_pos][nucleo_seq]:
-               res.append([trans_id, int(trans_pos), nucleo_seq] + temp)
+    #transfer information from json dict to list
+    print("Transferring data from json to dataframe...")
+    res = []
+    for row in data:
+        for trans_id in row.keys():
+            for trans_pos in row[trans_id].keys():
+                for nucleo_seq in row[trans_id][trans_pos].keys():
+                    temp = list(np.mean(np.array(row[trans_id][trans_pos][nucleo_seq]), axis=0))
+                # to get raw data without aggregation
+                # for features in row[trans_id][trans_pos][nucleo_seq]:
+                res.append([trans_id, int(trans_pos), nucleo_seq] + temp)
 
-   data = pd.DataFrame(res, columns = ['transcript_id', 'transcript_position', 'sequence',
-                                       'dwelling_t-1', 'sd_-1', 'mean_-1',
-                                       'dwelling_t0', 'sd_0', 'mean_0',
-                                       'dwelling_t1', 'sd_1', 'mean_1'
-                                       ])
-   # Merge json data with labels
-   print("Merging dataframes to obtain labels")
-   data = pd.merge(data,info, on = ['transcript_id', 'transcript_position'])
+    data = pd.DataFrame(res, columns = ['transcript_id', 'transcript_position', 'sequence',
+                                        'dwelling_t-1', 'sd_-1', 'mean_-1',
+                                        'dwelling_t0', 'sd_0', 'mean_0',
+                                        'dwelling_t1', 'sd_1', 'mean_1'
+                                        ])
+    # Merge json data with labels
+    print("Merging dataframes to obtain labels")
+    data = pd.merge(data,info, on = ['transcript_id', 'transcript_position'])
 
-   print("Creating features")
-   # Get one hot encoding
-   encoder = ce.OneHotEncoder(use_cat_names=True)
-   data = pd.concat([data,encoder.fit_transform(data['sequence'].str.split('', expand = True)[[1, 2, 3, 5, 6, 7]].rename(columns = {3: 'nucleo_-1', 5: 'nucleo_1',
-                                                                                                      1: 'nucleo_-3', 2: 'nucleo_-2',
-                                                                                                      6: 'nucleo_2', 7: 'nucleo_3'}))],axis=1)
-   # Get pwm
-   log_odds_dict, ppm = get_log_odds(data.sequence)
-   data["pwm_score"] = data.apply(lambda x: get_PWM_score(x.sequence, log_odds_dict),axis=1)
-   # Get the 3 variations of 5mers
-   data[["5mer_-1", "5mer_0", "5mer_1"]] = data['sequence'].apply(lambda x: list(get_knf(x, 5))).apply(pd.Series)
-   # Get knf
-   data[["knf_" + i for i in index_ls]] = data['sequence'].apply(lambda x: get_knf(x, 2, output_dic = False)).apply(pd.Series)
-   # Get cksnap
-   data[["cksnap_" + i for i in index_ls]] = data['sequence'].apply(lambda x: get_cksnap(x, 2, output_dic = False)).apply(pd.Series)
-   # Get dacc_bet
-   data['dacc_bet'] = data['sequence'].apply(lambda x: dacc(list(get_knf(x, 5))[0], list(get_knf(x, 5))[2]))
-   # Get jaccard similarity
-   data['js_all'] = data['sequence'].apply(lambda x: jaccard_similarity(list(get_knf(x, 5)), 2))
-   # Get eiip
-   data["eiip"] = data.apply(lambda x: eiip(x.sequence), axis=1)
+    print("Creating features")
+    # Get one hot encoding
+    encoder = ce.OneHotEncoder(use_cat_names=True)
+    data = pd.concat([data,encoder.fit_transform(data['sequence'].str.split('', expand = True)[[1, 2, 3, 5, 6, 7]].rename(columns = {3: 'nucleo_-1', 5: 'nucleo_1',
+                                                                                                        1: 'nucleo_-3', 2: 'nucleo_-2',
+                                                                                                        6: 'nucleo_2', 7: 'nucleo_3'}))],axis=1)
+    # Get pwm
+    log_odds_dict, ppm = get_log_odds(data.sequence)
+    data["pwm_score"] = data.apply(lambda x: get_PWM_score(x.sequence, log_odds_dict),axis=1)
+    # Get the 3 variations of 5mers
+    data[["5mer_-1", "5mer_0", "5mer_1"]] = data['sequence'].apply(lambda x: list(get_knf(x, 5))).apply(pd.Series)
+    # Get knf
+    data[["knf_" + i for i in index_ls]] = data['sequence'].apply(lambda x: get_knf(x, 2, output_dic = False)).apply(pd.Series)
+    # Get cksnap
+    data[["cksnap_" + i for i in index_ls]] = data['sequence'].apply(lambda x: get_cksnap(x, 2, output_dic = False)).apply(pd.Series)
+    # Get dacc_bet
+    data['dacc_bet'] = data['sequence'].apply(lambda x: dacc(list(get_knf(x, 5))[0], list(get_knf(x, 5))[2]))
+    # Get jaccard similarity
+    data['js_all'] = data['sequence'].apply(lambda x: jaccard_similarity(list(get_knf(x, 5)), 2))
+    # Get eiip
+    data["eiip"] = data.apply(lambda x: eiip(x.sequence), axis=1)
 
-   return data
+    return data
 
 ######################
 # To parse test data #
