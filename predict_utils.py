@@ -192,22 +192,16 @@ def parse_data(info_path, json_path):
                                                                                                       6: 'nucleo_2', 7: 'nucleo_3'}))],axis=1)
     # Get pwm
     log_odds_dict, ppm = get_log_odds(data.sequence)
-    print("pwm score")
     data["pwm_score"] = data.apply(lambda x: get_PWM_score(x.sequence, log_odds_dict),axis=1)
     # Get knf
-    print("knf")
     data[["knf_" + i for i in index_ls]] = data['sequence'].apply(lambda x: get_knf(x, 2, output_dic = False)).apply(pd.Series)
     # Get cksnap
-    print("cksnap")
     data[["cksnap_" + i for i in index_ls]] = data['sequence'].apply(lambda x: get_cksnap(x, 2, output_dic = False)).apply(pd.Series)
     # Get dacc_bet
-    print("dacc")
     data['dacc_bet'] = data['sequence'].apply(lambda x: dacc(list(get_knf(x, 5))[0], list(get_knf(x, 5))[2]))
     # Get jaccard similarity
-    print("jaccard similarity")
     data['js_all'] = data['sequence'].apply(lambda x: jaccard_similarity(list(get_knf(x, 5)), 2))
     # Get eiip
-    print("eiip")
     data["eiip"] = data.apply(lambda x: eiip(x.sequence), axis=1)
 
     return data
