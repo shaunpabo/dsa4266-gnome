@@ -153,11 +153,9 @@ def parse_data(info_path, json_path):
         data = [json.loads(line) for line in f]
 
     # loads data with label
-    print(f"Loading {info_path}...")
     info = pd.read_csv(info_path)
 
     #transfer information from json dict to list
-    print("Transferring data from json to dataframe...")
     res = []
     for row in data:
         for trans_id in row.keys():
@@ -183,10 +181,9 @@ def parse_data(info_path, json_path):
                                                            'dwelling_t0', 'sd_0', 'mean_0',
                                                            'dwelling_t1', 'sd_1', 'mean_1']).reset_index()
 
-    print("Creating features")
     # Get one hot encoding
     encoder = ce.OneHotEncoder(use_cat_names=True)
-    print("one hot encoding")
+
     data = pd.concat([data,encoder.fit_transform(data['sequence'].str.split('', expand = True)[[1, 2, 3, 5, 6, 7]].rename(columns = {3: 'nucleo_-1', 5: 'nucleo_1',
                                                                                                       1: 'nucleo_-3', 2: 'nucleo_-2',
                                                                                                       6: 'nucleo_2', 7: 'nucleo_3'}))],axis=1)
