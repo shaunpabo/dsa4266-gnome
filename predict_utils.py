@@ -325,9 +325,7 @@ def train_predict_label(X_train, y_train, X_test, y_test, model):
 
 def get_predict_col(data, model, features):
     print("Getting predictions...")
-    print(data.columns)
     feat = data[features]
-    print(feat.columns)
     y_hat = model.predict_proba(feat)
     print("Finished prediction")
     return pd.DataFrame({"prediction": y_hat[:,1]})
