@@ -12,6 +12,7 @@ if __name__=='__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--test_sample", action="store_true")
     group.add_argument("--sgnex", action="store_true")
+    parser.add_argument("--num_cores", default=2, type='int', help="number of cores used for prediction for SGNex, use -1 for all cores")
     args = parser.parse_args()
     if args.test_sample:
         print("Test predictions")
@@ -53,7 +54,10 @@ if __name__=='__main__':
     else:
         all_folders = os.listdir("./m6anet")
 
-        num_cores = cpu_count()
+        if args.num_cores == -1:
+            num_cores = cpu_count()
+        else:
+            num_cores = args.num_cores
 
         # report a message
         context = get_context('fork')
