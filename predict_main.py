@@ -37,11 +37,11 @@ if __name__=='__main__':
         data = data[features]
 
         # rfecv features
-        rfecv_features = pickle.load(open("./weights/rfecv_features.pkl", "rb"))
+        rfecv_features = pickle.load(open("./weights/xgb_rfecv_features.pkl", "rb"))
         data = data.loc[:, rfecv_features]
 
         # Load model
-        best_model = pickle.load(open("./weights/rfmodelgs.pkl",'rb'))
+        best_model = pickle.load(open("./weights/xgbmodelgs.pkl",'rb'))
 
         y_pred = best_model.predict(data)
         y_pred_proba = best_model.predict_proba(data)

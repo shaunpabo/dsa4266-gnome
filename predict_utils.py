@@ -4,7 +4,10 @@ import gzip
 import json
 import pickle
 import category_encoders as ce
-from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import RFECV
+from sklearn.metrics import average_precision_score, roc_auc_score, accuracy_score
+from sklearn.model_selection import GroupShuffleSplit
+import xgboost as xgb
 
 #########################
 # Function for features #
@@ -261,15 +264,10 @@ def parse_test_data(json_zip_path):
 
 def scale_data(data, features, identifiers):
     print("Scaling variables...")
-    scaler = StandardScaler()
+    with open("./weights/scaler.pkl","rb") as f:
+        scaler = pickle.load(f)
     new_df_scaled = pd.DataFrame(scaler.fit_transform(data[features]), columns = data[features].columns)
     return pd.concat([data[identifiers], new_df_scaled], axis=1)
-
-from sklearn.feature_selection import RFECV
-from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import average_precision_score, roc_auc_score, accuracy_score
-from sklearn.model_selection import GroupShuffleSplit
-import xgboost as xgb
 
 
 def train_test_split(data, split):
@@ -337,14 +335,14 @@ def task(i):
 
     data = parse_data(info_file, json_file)
 
-    with open("./weights/rfecv_features.pkl","rb") as f:
+    with open("./weights/xgb_rfecv_features.pkl","rb") as f:
         rfecv_features = pickle.load(f)
     
     identifier = ["transcript_id", "transcript_position", "start", "end", "n_reads"]
 
     data = data.loc[:,identifier + rfecv_features]
 
-    with open("./weights/rfmodelgs.pkl","rb") as f:
+    with open("./weights/xgbmodelgs.pkl","rb") as f:
         clf_xgb = pickle.load(f)
     scaled_data = scale_data(data, rfecv_features, identifier)
 
