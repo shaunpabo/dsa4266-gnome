@@ -7,6 +7,7 @@ import pickle
 from sklearn.metrics import average_precision_score, roc_auc_score, accuracy_score
 import math
 from utils import parse_data
+from multiprocessing import cpu_count
 
 if __name__=='__main__':
     # Read and parse data
@@ -94,15 +95,16 @@ if __name__=='__main__':
 
     params = {
         'bootstrap': [True, False],
-        # 'max_depth': [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, None],
+        'max_depth': [3, 5, 7, None],
         'max_features': ['auto', 'sqrt'],
         'min_samples_leaf': [1, 2, 4],
         'min_samples_split': [2, 5, 10],
-        'n_estimators': [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
+        'n_estimators': [1200, 1400, 1600, 1800, 2000]
         }
 
-    print("Gridsearching...")
-    gscv_model = GridSearchCV(clf, param_grid = params, verbose = 2, cv=5, scoring = 'roc_auc', n_jobs=1)
+    num_cores = cpu_count()
+    print(f"Gridsearching with {num_cores-2}...")
+    gscv_model = GridSearchCV(clf, param_grid = params, verbose = 2, cv=5, scoring = 'roc_auc', n_jobs=num_cores-2)
     gscv_model.fit(X_train_new,y_train)
     print("Gridsearch complete")
     pickle.dump(gscv_model.best_estimator_,open("./weights/rfmodelgs.pkl", "wb"))
