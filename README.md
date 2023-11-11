@@ -13,7 +13,7 @@ As such, a suitable machine-learning model to identify M6A RNA modifications fro
 |:--:| 
 | *Figure 1: ROC Curve of XGB and RF models on same test dataset* |
 
- | Accuracy | AUC ROC | PR ROC
+Metric | Accuracy | AUC ROC | PR ROC
 --- | --- | --- | ---
 XGB | 94.678 | 87.019 | 43.345
 RF | 95.319 | 85.537 | 41.495
