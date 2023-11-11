@@ -19,7 +19,10 @@ XGB | 94.678 | 87.019 | 43.345
 RF | 95.319 | 85.537 | 41.495
 
 ## Prediction
-Create an ubuntu instance on AWS (>= 8 cpu cores)
+You can run predictions on (1) our test dataset and (2) full SGNEx data easily.
+
+* Create an ubuntu instance on AWS (>= 8 cpu cores)
+
 After creating an ubuntu instance on AWS:
 ```
 git clone https://github.com/shaunpabo/dsa4266-gnome.git # enter username and git PAT
