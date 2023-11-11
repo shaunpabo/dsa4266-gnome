@@ -18,7 +18,6 @@ if __name__=='__main__':
         # PARSE DATA
         data = pd.read_csv('./data/stdtestset.csv')
         y_data = data.label
-        print(data.columns)
 
         # PREPROCESSING
         features = ['dwelling_t-1', 'sd_-1', 'mean_-1', 'dwelling_t0', 
