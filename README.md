@@ -9,7 +9,7 @@ This report focuses mainly on N6-methyladenosine (m6A) modifications due to its 
 As such, a suitable machine-learning model to identify M6A RNA modifications from direct RNA-Seq data with high accuracy will be developed. The method will then be applied to analyze data from the SG-NEx project.
 
 ## Results
-![Figure 1: ROC Curve of XGB and RF models on same test dataset](./images/figure1.png)
+![Figure 1: ROC Curve of XGB and RF models on same test dataset](images/figure1.jpg)
 
 ## Prediction
 Create an ubuntu instance on AWS (>= 8 cpu cores)
