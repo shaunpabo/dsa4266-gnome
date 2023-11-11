@@ -20,20 +20,6 @@ if __name__=='__main__':
         y_data = data.label
 
         # PREPROCESSING
-        features = ['dwelling_t-1', 'sd_-1', 'mean_-1', 'dwelling_t0', 
-                    'sd_0', 'mean_0', 'dwelling_t1', 'sd_1', 'mean_1', 'nucleo_-3_A', 
-                    'nucleo_-3_C', 'nucleo_-3_G', 'nucleo_-3_T', 'nucleo_-2_A', 
-                    'nucleo_-2_G', 'nucleo_-2_T', 'nucleo_-1_G', 'nucleo_-1_A', 
-                    'nucleo_1_C', 'nucleo_2_C', 'nucleo_2_T', 'nucleo_2_A', 'nucleo_3_A', 
-                    'nucleo_3_G', 'nucleo_3_T', 'nucleo_3_C', 'pwm_score', 'knf_AA',
-                    'knf_AG', 'knf_AT', 'knf_AC', 'knf_GG', 'knf_GA', 'knf_GT', 'knf_GC',
-                    'knf_TT', 'knf_TA', 'knf_TG', 'knf_TC', 'knf_CC', 'knf_CA', 'knf_CT',
-                    'knf_CG', 'cksnap_AA', 'cksnap_AG', 'cksnap_AT', 'cksnap_AC',
-                    'cksnap_GG', 'cksnap_GA', 'cksnap_GT', 'cksnap_GC', 'cksnap_TT',
-                    'cksnap_TA', 'cksnap_TG', 'cksnap_TC', 'cksnap_CC', 'cksnap_CA',
-                    'cksnap_CT', 'cksnap_CG', 'dacc_bet', 'js_all', 'eiip']
-        
-        data = data[features]
 
         # rfecv features
         rfecv_features = pickle.load(open("./weights/xgb_rfecv_features.pkl", "rb"))
@@ -42,6 +28,7 @@ if __name__=='__main__':
         # Load model
         best_model = pickle.load(open("./weights/xgbmodelgs.pkl",'rb'))
 
+        # PREDICT
         y_pred = best_model.predict(data)
         y_pred_proba = best_model.predict_proba(data)
 
@@ -54,7 +41,7 @@ if __name__=='__main__':
         auc_score = roc_auc_score(y_data, y_pred_proba[:,1])
         ap = average_precision_score(y_data, y_pred_proba[:,1])
 
-        print(f"Val Acc: {accuracy_score(y_data, y_pred)} | Val AUC-ROC {auc_score} | Val PR-ROC {ap}")
+        print(f"Test Acc: {accuracy_score(y_data, y_pred):.6f} | Test AUC-ROC {auc_score:.6f} | Test PR-ROC {ap:.6f}")
 
     else:
         all_folders = os.listdir("./m6anet")
