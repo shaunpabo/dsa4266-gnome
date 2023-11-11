@@ -17,7 +17,8 @@ Metric | Accuracy | AUC ROC | PR ROC
 --- | --- | --- | ---
 XGB | 94.678 | 87.019 | 43.345
 RF | 95.319 | 85.537 | 41.495
-*Evaluation metrics on our test dataset (in percentage)*
+|:--:| 
+| *Evaluation metrics on our test dataset (in percentage)* |
 
 ## Prediction
 You can run predictions on (1) our test dataset and (2) full SGNEx data easily.
