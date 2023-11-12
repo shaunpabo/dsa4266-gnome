@@ -151,7 +151,6 @@ def eiip(seq):
 
 def parse_data(info_path, json_path, filename):
     # loads data
-    print(f"Loading {json_path}...")
     with open(json_path, "r") as f:
         data = [json.loads(line) for line in f]
 
