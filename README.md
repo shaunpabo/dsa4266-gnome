@@ -35,3 +35,7 @@ python3 predict_main.py --sgnex # if you want to run prediction on SGNex data
 
 * Predictions for test dataset will be saved to `/dsa4266-gnome/output/test_data_predictions.csv`
 * Predictions for SGNEx data will be saved to `/dsa4266-gnome/output/sgnex_compiled_df.csv`
+
+Copy files to `/studies/ProjectStorage/` to download from S3 if needed.
+
+Thank you :)
