@@ -61,4 +61,4 @@ if __name__=='__main__':
         df = pd.concat(df_list, ignore_index=True)
         df.to_csv("./output/compiled_df.csv", index=False)
         # report a message
-        print('Combined csv saved to ./output/compiled_df.csv')
+        print('Combined csv saved to ./output/sgnex_compiled_df.csv')

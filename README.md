@@ -32,3 +32,6 @@ bash setup_linux.sh
 python3 predict_main.py --test_sample # if you want to run prediction on the test dataset
 python3 predict_main.py --sgnex # if you want to run prediction on SGNex data
 ```
+
+* Predictions for test dataset will be saved to `/dsa4266-gnome/output/test_data_predictions.csv`
+* Predictions for SGNEx data will be saved to `/dsa4266-gnome/output/sgnex_compiled_df.csv`
