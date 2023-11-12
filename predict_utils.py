@@ -342,7 +342,7 @@ def task(i):
 
     data = data.loc[:,identifier + rfecv_features]
 
-    with open("./weights/xgbmodelgs.pkl","rb") as f:
+    with open("./weights/xgb_full.pkl","rb") as f:
         clf_xgb = pickle.load(f)
     scaled_data = scale_data(data, rfecv_features, identifier)
 
