@@ -344,9 +344,9 @@ def task(filename):
 
     with open("./weights/xgbmodelgs.pkl","rb") as f:
         clf_xgb = pickle.load(f)
-    scaled_data = scale_data(data, rfecv_features, identifier)
+    scaled_data = scale_data(data, rfecv_features, identifier, filename)
 
-    y_hat = get_predict_col(scaled_data, clf_xgb, rfecv_features)
+    y_hat = get_predict_col(scaled_data, clf_xgb, rfecv_features, filename)
     # del scaled_data
     print(f"{filename} - Concatenating prediction column")
     df = pd.concat([pd.DataFrame({"cell_line": [cancer] * len(data) }), data, y_hat], axis = 1)
