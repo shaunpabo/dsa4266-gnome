@@ -26,7 +26,7 @@ You can run predictions on (1) our test dataset and (2) full SGNEx data easily.
 * Create an ubuntu instance on AWS (>= 8 cpu cores, 64gb ram - m5a.4xLarge)
 * After creating an ubuntu instance on AWS:
 ```
-git clone https://github.com/shaunpabo/dsa4266-gnome.git # enter username and git PAT
+git clone https://github.com/shaunpabo/dsa4266-gnome.git
 cd dsa4266-gnome
 bash setup_linux.sh
 python3 predict_main.py --test_sample # if you want to run prediction on the test dataset
