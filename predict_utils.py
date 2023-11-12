@@ -149,7 +149,7 @@ def eiip(seq):
 # To parse training data #
 ##########################
 
-def parse_data(info_path, json_path):
+def parse_data(info_path, json_path, filename):
     # loads data
     print(f"Loading {json_path}...")
     with open(json_path, "r") as f:
@@ -177,7 +177,7 @@ def parse_data(info_path, json_path):
     del res
    
     # Merge json data with labels
-    print("Merging dataframes to obtain labels")
+    print(f"{filename} - Merging dataframes to obtain labels")
     data = pd.merge(data,info, on = ['transcript_id', 'transcript_position'])
 
     data = data.groupby(['transcript_id', 'transcript_position', 'sequence', "start", "end", "n_reads"]).mean(['dwelling_t-1', 'sd_-1', 'mean_-1',
@@ -262,8 +262,8 @@ def parse_test_data(json_zip_path):
 # Scaling #
 ###########
 
-def scale_data(data, features, identifiers):
-    print("Scaling variables...")
+def scale_data(data, features, identifiers, filename):
+    print(f"{filename} - Scaling variables")
     with open("./weights/scaler.pkl","rb") as f:
         scaler = pickle.load(f)
     new_df_scaled = pd.DataFrame(scaler.fit_transform(data[features]), columns = data[features].columns)
@@ -318,22 +318,22 @@ def train_predict_label(X_train, y_train, X_test, y_test, model):
 
     return y_pred_proba[:,1]
 
-def get_predict_col(data, model, features):
-    print("Getting predictions...")
+def get_predict_col(data, model, features, filename):
+    print(f"{filename} - Getting predictions")
     feat = data[features]
     y_hat = model.predict_proba(feat)
-    print("Finished prediction")
+    print(f"{filename} - Finished prediction")
     return pd.DataFrame({"prediction": y_hat[:,1]})
 
 
 
-def task(i):
-    print("parsing file" + i)
-    json_file = "./m6anet/" + i + "/data.json"
-    info_file = "./m6anet/" + i + "/data.info"
-    cancer = i.split('_')[1]
+def task(filename):
+    print(f"{filename} - parsing file")
+    json_file = "./m6anet/" + filename + "/data.json"
+    info_file = "./m6anet/" + filename + "/data.info"
+    cancer = filename.split('_')[1]
 
-    data = parse_data(info_file, json_file)
+    data = parse_data(info_file, json_file, filename)
 
     with open("./weights/xgb_rfecv_features.pkl","rb") as f:
         rfecv_features = pickle.load(f)
@@ -342,7 +342,7 @@ def task(i):
 
     data = data.loc[:,identifier + rfecv_features]
 
-    with open("./weights/xgb_full.pkl","rb") as f:
+    with open("./weights/xgbmodelgs.pkl","rb") as f:
         clf_xgb = pickle.load(f)
     scaled_data = scale_data(data, rfecv_features, identifier)
 
@@ -351,5 +351,5 @@ def task(i):
     print("Concatenating prediction column...")
     df = pd.concat([pd.DataFrame({"cell_line": [cancer] * len(data) }), data, y_hat], axis = 1)
 
-    print("Completed job" + i)
+    print("Completed job" + filename)
     return df
