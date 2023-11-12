@@ -348,8 +348,8 @@ def task(filename):
 
     y_hat = get_predict_col(scaled_data, clf_xgb, rfecv_features)
     # del scaled_data
-    print("Concatenating prediction column...")
+    print(f"{filename} - Concatenating prediction column")
     df = pd.concat([pd.DataFrame({"cell_line": [cancer] * len(data) }), data, y_hat], axis = 1)
 
-    print("Completed job" + filename)
+    print(f"{filename} - Completed job")
     return df
